@@ -175,6 +175,7 @@ object StandoffAnnotationHandler {
         if (!line.contains("<p>") || !line.contains("</p>")) {
           Logger.logss("ANOMALOUS LINE")
           Logger.logss(line)
+          inText = false
         }
         val lineStart = line.indexOf("<p>") + 3
         val relevantLine = line.substring(lineStart, line.indexOf("</p>"))
