@@ -178,7 +178,7 @@ object StandoffAnnotationHandler {
           inText = false
         }
         val lineStart = line.indexOf("<p>") + 3
-        val relevantLine = line.substring(lineStart, line.indexOf("</p>"))
+        val relevantLine = if (line.contains("<p>") && line.contains("</p>")) line.substring(lineStart, line.indexOf("</p>")) else line
 //        Logger.logss("CURRENT LINE: " + relevantLine)
         var linePtr = 0
         while (inText && linePtr < relevantLine.size) {

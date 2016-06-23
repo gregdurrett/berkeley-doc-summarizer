@@ -103,11 +103,15 @@ in the CoNLL format with constituency parses, NER, and coreference. For a system
 does this, see the [Berkeley Entity Resolution System](https://github.com/gregdurrett/berkeley-entity).
 The ```test/``` directory already contains a few such files.
 
+The summarizer then does additional processing with EDU segmentation and discourse parsing.
+These use the models that are by default located in ```models/edusegmenter.ser.gz``` and
+```models/discoursedep.ser.gz```. You can control these with command-line switches.
+
 The system is distributed with several pre-trained variants:
 
-* summarizer-extractive.ser.gz: a sentence-extractive summarizer
-* summarizer-extractive-compressive.ser.gz: an extractive-compressive summarizer
-* summarizer-full.ser.gz: an extractive-compressive summarizer with the ability to rewrite pronouns
+* ```summarizer-extractive.ser.gz```: a sentence-extractive summarizer
+* ```summarizer-extractive-compressive.ser.gz```: an extractive-compressive summarizer
+* ```summarizer-full.ser.gz```: an extractive-compressive summarizer with the ability to rewrite pronouns
 and additional coreference features and constraints
 
 
@@ -158,7 +162,7 @@ To train the full system, run:
       -modelPath "models/trained-model.ser.gz" -corefModelPath "models/coref-onto.ser.gz"
       -printSummaries -printSummariesForTurk
 
-where <jarpath>, <library path>, and the data paths are instantiated accordingly. The system requires a lot
+where ```<jarpath>```, ```<library path>```, and the data paths are instantiated accordingly. The system requires a lot
 of memory due to caching 25,000 training documents with annotations.
 
 To train the sentence extractive version of the system, add:
