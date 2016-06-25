@@ -177,8 +177,8 @@ To train the extractive-compressive version, add:
 The results you get using this command should be:
 
 * extractive: ROUGE-1 recall: 38.6 / ROUGE-2 recall: 23.3
-* extractive-compressive: XXX
-* full: XXX
+* extractive-compressive: ROUGE-1 recall: 42.2 / ROUGE-2 recall: 26.1
+* full: ROUGE-1 recall: 41.9 / ROUGE-2 recall: 25.7
 
 (Results are slightly different from those in the paper due to minor changes for this
 release.)
