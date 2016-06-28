@@ -131,23 +131,29 @@ To prepare the dataset, first you need to extract all the XML files from 2005-20
 them into a single directory. Not all files have summaries, so not all of these will
 be used. Next, run
 
-    java -Xmx3g -cp <jarpath> edu.berkeley.nlp.preprocess.summ.preprocess.StandoffAnnotationHandler
-      -inputDir <path_to_standoffs> -rawXMLPath <path_to_flattened_NYT_XMLs> -outputDir <output>
+    mkdir train_corefner
+    java -Xmx3g -cp <jarpath> edu.berkeley.nlp.summ.preprocess.StandoffAnnotationHandler \
+      -inputDir train_corefner_standoff/ -rawXMLDir <path_to_flattened_NYT_XMLs> -outputDir train_corefner/
 
-This will take a standoff annotation directory (either train or test) and reconstitute
-the files using the XML data, writing to the output directory.
+This will take the train standoff annotation files and reconstitute
+the real files using the XML data, writing to the output directory. Use ```eval``` instead of ```train```
+to reconstitute the test set.
     
 To reconstitute abstracts, run:
 
-    java -Xmx3g -cp <jarpath> edu.berkeley.nlp.preprocess.summ.preprocess.StandoffAnnotationHandler
-      -inputDir <path_to_standoff_abstracts> -rawXMLPath <path_to_flattened_NYT_XMLs> -outputDir <output>
+    java -Xmx3g -cp <jarpath> edu.berkeley.nlp.summ.preprocess.StandoffAnnotationHandler \
+      -inputDir train_abstracts_standoff/ -rawXMLDir <path_to_flattened_NYT_XMLs> -outputDir train_abstracts/ \
       -tagName "abstract"
+
+and similarly swap out for ```eval``` appropriately.
 
 ####ROUGE Scorer
 
 We bundle the system with a version of the ROUGE scorer that will be called during
 execution. ```rouge-gillick.sh``` hardcodes command-line arguments used in this work and
-in Hirao et al. (2013)'s work.
+in Hirao et al. (2013)'s work. The system expects this in the ```rouge/ROUGE/``` directory
+under the execution directory, along with the appropriate data files (which we've also
+bundled with this release).
 
 See ```edu.berkeley.nlp.summ.RougeComputer.evaluateRougeNonTok``` for a method you can
 use to evaluate ROUGE in a manner consistent with our evaluation.
@@ -156,11 +162,11 @@ use to evaluate ROUGE in a manner consistent with our evaluation.
 
 To train the full system, run:
 
-    java -Xmx80g -cp <jarpath> -Djava.library.path=<library path>:/usr/local/lib/jni edu.berkeley.nlp.summ.Main
-      -trainDocsPath <path_to_train_conll_docs> -trainAbstractsPath <path_to_train_summaries>
-      -evalDocsPath <path_to_eval_conll_docs> -evalAbstractsPath <path_to_eval_summaries> -abstractsAreConll
-      -modelPath "models/trained-model.ser.gz" -corefModelPath "models/coref-onto.ser.gz"
-      -printSummaries -printSummariesForTurk
+    java -Xmx80g -cp <jarpath> -Djava.library.path=<library path>:/usr/local/lib/jni edu.berkeley.nlp.summ.Main \
+      -trainDocsPath <path_to_train_conll_docs> -trainAbstractsPath <path_to_train_summaries> \
+      -evalDocsPath <path_to_eval_conll_docs> -evalAbstractsPath <path_to_eval_summaries> -abstractsAreConll \
+      -modelPath "models/trained-model.ser.gz" -corefModelPath "models/coref-onto.ser.gz" \
+      -printSummaries -printSummariesForTurk \
 
 where ```<jarpath>```, ```<library path>```, and the data paths are instantiated accordingly. The system requires a lot
 of memory due to caching 25,000 training documents with annotations.

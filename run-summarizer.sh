@@ -1,6 +1,8 @@
 #!/bin/bash
 
-jarpath="target/scala-2.11/berkeley-doc-summarizer-assembly-1.jar"
+jarpath="berkeley-doc-summarizer-assembly-1.jar"
+echo "Running with jar located at $jarpath"
+echo "If the assembled project jar isn't located here, edit run-summarizer.sh to point to the correct location"
 # Extracts the existing java library path
 java_lib_path=$(java -cp $jarpath edu.berkeley.nlp.summ.GLPKTest noglpk | head -1)
 java_lib_path="$java_lib_path:/usr/local/lib/jni"

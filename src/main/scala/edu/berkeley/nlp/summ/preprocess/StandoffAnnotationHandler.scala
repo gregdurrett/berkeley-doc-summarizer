@@ -19,25 +19,20 @@ import edu.berkeley.nlp.futile.LightRunner
 object StandoffAnnotationHandler {
   
   val readAnnotations = true
-  val inputDir = "../summ-data/nyt08/trainsm_corefner_standoff/"
-//  val outputDir = "../summ-data/nyt08/trainsm_corefner_standoff/"
-  val outputDir = "../summ-data/nyt08/trainsm_corefner_reconstituted/"
-  val rawXMLDir = "../summ-data/nyt08/train/"
+  val inputDir = ""
+  val outputDir = ""
+  val rawXMLDir = ""
   
   val maxNumFiles = Int.MaxValue
   
   val tagName = "block class=\"full_text\""
-//  val tagName = "abstract"
 
   def main(args: Array[String]) {
     LightRunner.initializeOutput(StandoffAnnotationHandler.getClass())
     LightRunner.populateScala(StandoffAnnotationHandler.getClass(), args)
-    
-//    val corefNerFile = "../summ-data/nyt08/trainsm_corefner/1570865"
-//    val rawXMLFile = "../summ-data/nyt08/train/1570865.xml"
-//    align(corefNerFile, rawXMLFile)
-//    System.exit(0)
-    
+    if (inputDir.isEmpty || outputDir.isEmpty || rawXMLDir.isEmpty) {
+      Logger.logss("Need all three of inputDir, outputDir, and rawXMLDir to be specified!")
+    }
     if (readAnnotations) {
       val corefNerFilesToAlign = new File(inputDir).listFiles()
       for (corefNerFile <- corefNerFilesToAlign) {
@@ -255,10 +250,16 @@ object StandoffAnnotationHandler {
     }
     // Verify that the words are the same
     val reextractedWords = extractWords(finalAlignments, rawXMLLines)
+    if (reextractedWords.size != corefNerDoc.words.size) {
+      Logger.logss("UNEXPLAINED mismatch! " + reextractedWords.size + " " + corefNerDoc.words.size)
+    }
     var someMistake = false
     var standoffCounter = 0
     var missCounter = 0
     for (lineIdx <- 0 until finalAlignments.size) {
+      if (reextractedWords(lineIdx).size != corefNerDoc.words(lineIdx).size) {
+        Logger.logss("UNEXPLAINED mismatch in line " + lineIdx + ": " + reextractedWords(lineIdx).size + " " + corefNerDoc.words(lineIdx).size)
+      }
       for (wordIdx <- 0 until finalAlignments(lineIdx).size) {
         if (alignmentRe.findFirstIn(finalAlignments(lineIdx)(wordIdx)) != None) {
           standoffCounter += 1
