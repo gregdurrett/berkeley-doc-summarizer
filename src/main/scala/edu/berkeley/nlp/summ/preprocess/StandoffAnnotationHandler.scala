@@ -33,26 +33,32 @@ object StandoffAnnotationHandler {
     if (inputDir.isEmpty || outputDir.isEmpty || rawXMLDir.isEmpty) {
       Logger.logss("Need all three of inputDir, outputDir, and rawXMLDir to be specified!")
     }
+    // Reconstituting documents
     if (readAnnotations) {
+      var numReadFailures = 0
       val corefNerFilesToAlign = new File(inputDir).listFiles()
       for (corefNerFile <- corefNerFilesToAlign) {
         val rawXMLPath = rawXMLDir + "/" + corefNerFile.getName() + ".xml"
         Logger.logss("Dealing with " + corefNerFile.getAbsolutePath)
-        val reconstitutedConllDoc = reverseStandoffAnnotations(corefNerFile.getAbsolutePath, rawXMLPath)
-        if (reconstitutedConllDoc.docID == "") {
+        val maybeReconstitutedConllDoc = reverseStandoffAnnotations(corefNerFile.getAbsolutePath, rawXMLPath)
+        if (!maybeReconstitutedConllDoc.isDefined) {
+          numReadFailures += 1
+        } else if (maybeReconstitutedConllDoc.get.docID == "") {
           val path = outputDir + "/" + corefNerFile.getName
           val outWriter = IOUtils.openOutHard(path)
           Logger.logss("Wrote to " + path)
           outWriter.close
         } else {
-          val path = outputDir + "/" + reconstitutedConllDoc.docID
+          val path = outputDir + "/" + maybeReconstitutedConllDoc.get.docID
           val outWriter = IOUtils.openOutHard(path)
-          ConllDocWriter.writeDoc(outWriter, reconstitutedConllDoc)
+          ConllDocWriter.writeDoc(outWriter, maybeReconstitutedConllDoc.get)
           Logger.logss("Wrote to " + path)
           outWriter.close
         }
       }
+      Logger.logss("Total read failures: " + numReadFailures + " / " + corefNerFilesToAlign.size)
     } else {
+      // Producing the standoff annotations in the first place
       val rawCorefNerFilesToAlign = new File(inputDir).listFiles()
       val corefNerFilesToAlign = rawCorefNerFilesToAlign.slice(0, Math.min(maxNumFiles, rawCorefNerFilesToAlign.size))
       for (corefNerFile <- corefNerFilesToAlign) {
@@ -282,18 +288,23 @@ object StandoffAnnotationHandler {
     finalAlignments
   }
   
-  def reverseStandoffAnnotations(corefNerFile: String, rawXMLFile: String) = {
-    val standoffConllDoc = new ConllDocReader(Language.ENGLISH).readConllDocs(corefNerFile).head
-    val rawXMLLines = IOUtils.readLinesHard(rawXMLFile).asScala
-    val words = extractWords(new ArrayBuffer[ArrayBuffer[String]] ++ standoffConllDoc.words.map(new ArrayBuffer[String] ++ _), rawXMLLines)
-    val reconstitutedConllDoc = new ConllDoc(standoffConllDoc.docID,
-                                             standoffConllDoc.docPartNo,
-                                             words,
-                                             standoffConllDoc.pos,
-                                             standoffConllDoc.trees,
-                                             standoffConllDoc.nerChunks,
-                                             standoffConllDoc.corefChunks,
-                                             standoffConllDoc.speakers)
+  def reverseStandoffAnnotations(corefNerFile: String, rawXMLFile: String): Option[ConllDoc] = {
+    var reconstitutedConllDoc: Option[ConllDoc] = None
+    try {
+      val standoffConllDoc = new ConllDocReader(Language.ENGLISH).readConllDocs(corefNerFile).head
+      val rawXMLLines = IOUtils.readLinesHard(rawXMLFile).asScala
+      val words = extractWords(new ArrayBuffer[ArrayBuffer[String]] ++ standoffConllDoc.words.map(new ArrayBuffer[String] ++ _), rawXMLLines)
+      reconstitutedConllDoc = Some(new ConllDoc(standoffConllDoc.docID,
+                                                standoffConllDoc.docPartNo,
+                                                words,
+                                                standoffConllDoc.pos,
+                                                standoffConllDoc.trees,
+                                                standoffConllDoc.nerChunks,
+                                                standoffConllDoc.corefChunks,
+                                                standoffConllDoc.speakers))
+    } catch {
+      case e: Exception => Logger.logss("Exception reading standoffs for " + corefNerFile + " " + rawXMLFile + ": " + e.toString)
+    }
     reconstitutedConllDoc
   }
   
