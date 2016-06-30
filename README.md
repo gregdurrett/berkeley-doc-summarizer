@@ -127,7 +127,7 @@ included manually (e.g. when tokenization makes our data non-recoverable from th
 file). A few scattered tokens are included explicitly, plus roughly 1% of files that our
 system couldn't find a suitable alignment for.
 
-To prepare the dataset, first you need to extract all the XML files from 2005-2007 and flatten
+To prepare the dataset, first you need to extract all the XML files from 2003-2007 and flatten
 them into a single directory. Not all files have summaries, so not all of these will
 be used. Next, run
 
