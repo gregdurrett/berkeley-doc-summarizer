@@ -51,8 +51,10 @@ parser, and coreference model) as well as running it (you need the EDU segmenter
 discourse parser, and summarization model, which contains the coreference model).
 All of these are expected in the models/ subdirectory.
 
-We also require [number and gender data](http://www.clsp.jhu.edu/~sbergsma/Gender/)
-(default path the system expects this data at: data/gender.data).
+We also require [number and gender data](http://www.cs.utexas.edu/~gdurrett/data/gender.data.tgz)
+produced by Shane Bergsma and Dekang Lin in in "Bootstrapping Path-Based Pronoun Resolution".
+Download this, untar/gzip it, and put it at `data/gender.data` (default path the system
+expects it to be at).
 
 ####GLPK
 
