@@ -9,7 +9,7 @@ deleted or unclear.
 
 
 
-##Preamble
+## Preamble
 
 The Berkeley Document Summarizer is described in:
 
@@ -22,7 +22,7 @@ Questions? Bugs? Email me at gdurrett@eecs.berkeley.edu
 
 
 
-##License
+## License
 
 Copyright (c) 2013-2016 Greg Durrett. All Rights Reserved.
 
@@ -40,9 +40,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/
 
 
-##Setup
+## Setup
 
-####Models and Data
+#### Models and Data
 
 Models are not included in GitHub due to their large size. Download the latest
 models from http://nlp.cs.berkeley.edu/projects/summarizer.shtml. These
@@ -56,7 +56,7 @@ produced by Shane Bergsma and Dekang Lin in in "Bootstrapping Path-Based Pronoun
 Download this, untar/gzip it, and put it at `data/gender.data` (default path the system
 expects it to be at).
 
-####GLPK
+#### GLPK
 
 For solving ILPs, our system relies on GLPK.  The easiest way to install GLPK
 is with [homebrew](http://brew.sh/). Additionally, when running the system, you
@@ -74,7 +74,7 @@ Java library path with the location of the libglpk_java libraries as follows:
 On OS X, this may be located in ```/usr/local/lib/jni```. ```run-summarize.sh```
 attempts to set this automatically, but may not work for your system.
 
-####Building from source
+#### Building from source
 
 The easiest way to build is with SBT:
 https://github.com/harrah/xsbt/wiki/Getting-Started-Setup
@@ -90,7 +90,7 @@ http://scala-ide.org
 
 
 
-##Running the system
+## Running the system
 
 The two most useful main classes are ```edu.berkeley.nlp.summ.Main``` and
 ```edu.berkeley.nlp.summ.Summarizer```. The former is a more involved harness
@@ -118,9 +118,9 @@ and additional coreference features and constraints
 
 
 
-##Training
+## Training
 
-####New York Times Dataset
+#### New York Times Dataset
 
 The primary corpus we use for training and evaluation is the New York Times Annotated Corpus
 (Sandhaus, 2007), LDC2008T19. We distribute our preprocessing as standoff annotations which
@@ -149,7 +149,7 @@ To reconstitute abstracts, run:
 
 and similarly swap out for ```eval``` appropriately.
 
-####ROUGE Scorer
+#### ROUGE Scorer
 
 We bundle the system with a version of the ROUGE scorer that will be called during
 execution. ```rouge-gillick.sh``` hardcodes command-line arguments used in this work and
@@ -160,7 +160,7 @@ bundled with this release).
 See ```edu.berkeley.nlp.summ.RougeComputer.evaluateRougeNonTok``` for a method you can
 use to evaluate ROUGE in a manner consistent with our evaluation.
 
-####Training the system
+#### Training the system
 
 To train the full system, run:
 
