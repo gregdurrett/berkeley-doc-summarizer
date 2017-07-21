@@ -7,6 +7,11 @@ from constituency parses and RST discourse parses. Moreover, it can improve
 summary clarity by reexpressing pronouns whose antecedents would otherwise be
 deleted or unclear.
 
+NOTE: If all you're interested in is the New York Times dataset, you do *not*
+need to do most of the setup and preprocessing below. Instead, use the pre-built
+.jar and run the commands in the "New York Times Dataset" section under "Training"
+below.
+
 
 
 ## Preamble
