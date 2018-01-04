@@ -63,21 +63,26 @@ expects it to be at).
 
 #### GLPK
 
-For solving ILPs, our system relies on GLPK.  The easiest way to install GLPK
-is with [homebrew](http://brew.sh/). Additionally, when running the system, you
-must have ```glpk-java-1.1.0.jar``` on the build path (already done if you're
-using sbt) as well as make sure the Java Native Interface (JNI) libraries are
-accessible. These allow the GLPK Java bindings to interact with the native GLPK
-code.
+For solving ILPs, our system relies on GLPK, specifically [GLPK for Java](http://glpk-java.sourceforge.net/).
+For OS X, the easiest way to install GLPK is with [homebrew](http://brew.sh/). On Linux,
+you should run ```sudo apt-get install glpk-utils libglpk-dev libglpk-java```.
 
-You can try this out with ```edu.berkeley.nlp.summ.GLPKTest```; if this class runs
-without error, you're good! If you do get an error, you may need to augment the
-Java library path with the location of the libglpk_java libraries as follows:
+Both the libglpk-java and Java Native Interface (JNI) libraries need to be in
+your Java library path (see below for how to test this); these libraries allow
+Java to interact with the native GLPK code.  Additionally, when running the
+system, you must have ```glpk-java-1.1.0.jar``` on the build path; this is
+included in the lib directory and bundled with the distributed jar, and will
+continue to be included automatically if you build with sbt.
 
-    -Djava.library.path="<current library path>:<location of libglpk_java libraries>"
-    
-On OS X, this may be located in ```/usr/local/lib/jni```. ```run-summarize.sh```
-attempts to set this automatically, but may not work for your system.
+You can test whether the system can call GLPK successfully with with
+```run-glpk-test.sh```, which tries to solve a small ILP defined in
+```edu.berkeley.nlp.summ.GLPKTest```. The script attempts to augment the
+library path with ```/usr/local/lib/jni```, which is sometimes where the JNI
+library is located on OS X. If this script reports an error, you may need to
+augment the Java library path with the location of either the JNI or the
+libglpk_java libraries as follows:
+
+    -Djava.library.path="<current library path>:<location of additional library>"
 
 #### Building from source
 
